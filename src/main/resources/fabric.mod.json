@@ -3,7 +3,7 @@
 	"id": "bedrock_coordinates_display",
 	"version": "${version}",
 	"name": "Bedrock Coordinates Display",
-	"description": "",
+	"description": "This project adds the bedrock coordinates display to Java.",
 	"authors": [
 		"Korin"
 	],
