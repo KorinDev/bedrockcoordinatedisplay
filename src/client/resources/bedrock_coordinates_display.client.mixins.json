@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "net.korin.bedrock_coordinates_display.client.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"ExampleClientMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
