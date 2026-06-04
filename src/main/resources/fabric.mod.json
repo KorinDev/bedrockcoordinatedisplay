@@ -3,13 +3,14 @@
 	"id": "bedrock_coordinates_display",
 	"version": "${version}",
 	"name": "Bedrock Coordinates Display",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "",
 	"authors": [
-		"Me!"
+		"Korin"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://discord.com/invite/b59Gjxxzqf",
+		"sources": "https://github.com/KorinDev/bedrockcoordinatedisplay",
+        "issues": "https://github.com/KorinDev/bedrockcoordinatedisplay/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/bedrock_coordinates_display/icon.png",

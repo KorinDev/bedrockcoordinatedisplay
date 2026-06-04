@@ -1,12 +1,23 @@
-# Bedrock Coordinates Display
+# Bedrock Flight
 
-<img width="1765" height="456" alt="image" src="https://github.com/user-attachments/assets/1e73e8f1-38d6-4dd0-b199-2232ce7f1d27" />
+**#MadeWithOWOLIB**
+**#FOSS**
+**#Gloopy**
 
 
-## Setup
+---
 
-For setup instructions, please see the [Fabric Documentation page](https://docs.fabricmc.net/develop/getting-started/creating-a-project#setting-up) related to the IDE that you are using.
 
-## License
+## About:
+This mod is a port of the Bedrock Coordinates Display.<br>
+It can be toggled with a (configurable) button.<br>
+It's position can also be somewhat customised.
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## Screenshots:
+
+![Coordinates Showcase 1](https://cdn.modrinth.com/data/cached_images/6082f4ac3a9f0c01a72126c188f9932544a5de93.jpeg)![Coordinates Showcase 2](https://cdn.modrinth.com/data/cached_images/c8e2e71aa82c30b09fee66fe846345408c94998c.jpeg)
+
+
+![Config Screen](https://cdn.modrinth.com/data/cached_images/732e542e66d5f2b847da27bf921e383a4419b454_0.webp)
+## License:
+This project is under the MIT license.
