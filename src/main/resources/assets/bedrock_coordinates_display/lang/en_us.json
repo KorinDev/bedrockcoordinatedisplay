@@ -1,0 +1,10 @@
+{
+  "text.config.bedrock_coordinates_display.title": "Bedrock Coordinates Display",
+  "text.config.bedrock_coordinates_display.option.enabled": "Enabled",
+  "text.config.bedrock_coordinates_display.option.offsetX": "X Offset",
+  "text.config.bedrock_coordinates_display.option.offsetY": "Y Offset",
+  "text.config.bedrock_coordinates_display.option.padding": "Padding",
+  "text.config.bedrock_coordinates_display.option.backgroundOpacity": "Background Opacity",
+  "key.bedrock_coordinates_display.toggle_visibility": "Toggle Visibility",
+  "key.category.bedrock_coordinates_display.keybinds": "Bedrock Coordinates Display"
+}
