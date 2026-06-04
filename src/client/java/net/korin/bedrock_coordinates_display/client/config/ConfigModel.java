@@ -4,6 +4,7 @@ import io.wispforest.owo.config.annotation.Config;
 import io.wispforest.owo.config.annotation.Modmenu;
 import io.wispforest.owo.config.annotation.RangeConstraint;
 
+
 @Modmenu(modId = "bedrock_coordinates_display")
 @Config(name = "bedrock_coordinates_display", wrapperName = "BedrockCoordinatesDisplayConfig")
 public class ConfigModel {
@@ -17,6 +18,9 @@ public class ConfigModel {
 
     @RangeConstraint(min = 0, max = 16)
     public int padding = 4;
+
+
+    public boolean useChatBackgroundOpacity = false;
 
     @RangeConstraint(min = 0, max = 255)
     public int backgroundOpacity = 150;

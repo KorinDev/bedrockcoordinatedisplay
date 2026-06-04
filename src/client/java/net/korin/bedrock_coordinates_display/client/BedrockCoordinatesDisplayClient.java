@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.korin.bedrock_coordinates_display.client.config.BedrockCoordinatesDisplayConfig;
-import net.korin.bedrock_coordinates_display.client.config.ConfigModel;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -46,8 +45,8 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
         ));
 
         HudElementRegistry.attachElementAfter(
-                VanillaHudElements.HOTBAR,
-                Identifier.fromNamespaceAndPath(BedrockCoordinatesDisplayClient.MOD_ID, "after_hotbar"), BedrockCoordinatesDisplayClient::extract
+                VanillaHudElements.CHAT,
+                Identifier.fromNamespaceAndPath(BedrockCoordinatesDisplayClient.MOD_ID, "after_chat"), BedrockCoordinatesDisplayClient::extract
         );
 
 
@@ -81,17 +80,23 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
         int textWidth = font.width(coords);
         int textHeight = font.lineHeight - 1;
         int padding = CONFIG.padding();
+        int opacity = CONFIG.backgroundOpacity();
+
+        if (CONFIG.useChatBackgroundOpacity()) {
+            double opacityFloat = client.options.textBackgroundOpacity().get();
+            int opacityAlpha = (int) Math.round(opacityFloat * 255.0);
+            opacity = Math.min(255, Math.max(0, opacityAlpha));
+        }
 
         graphics.fill(
                 x_offset - padding,
                 y_offset - padding,
                 x_offset + textWidth + padding,
                 y_offset + textHeight + padding,
-                ARGB.color(CONFIG.backgroundOpacity(), 0, 0, 0));
-
+                ARGB.color(opacity, 0, 0, 0));
 
         graphics.text(font, Component.literal(coords), x_offset, y_offset, ARGB.color(255, 255, 255, 255), true);
-
+        //client.options.getBackgroundOpacity()
         graphics.nextStratum();
     }
 }
