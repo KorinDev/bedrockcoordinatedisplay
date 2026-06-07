@@ -1,4 +1,4 @@
-# Bedrock Flight
+# Bedrock Coordinates Display
 
 **#MadeWithOWOLIB**
 **#FOSS**
