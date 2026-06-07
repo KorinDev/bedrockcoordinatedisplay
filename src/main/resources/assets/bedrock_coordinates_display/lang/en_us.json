@@ -1,5 +1,12 @@
 {
   "text.config.bedrock_coordinates_display.title": "Bedrock Coordinates Display",
+
+  "text.config.bedrock_coordinates_display.category.positionDisplay": "Position",
+  "text.config.bedrock_coordinates_display.category.dayDisplay": "Day Counter",
+  "text.config.bedrock_coordinates_display.category.biomeDisplay": "Biome",
+  "text.config.bedrock_coordinates_display.category.framerateDisplay": "Framerate",
+  "text.config.bedrock_coordinates_display.category.speedDisplay": "Speed",
+
   "text.config.bedrock_coordinates_display.option.enabled": "Enabled",
   "text.config.bedrock_coordinates_display.option.offsetX": "X Offset",
   "text.config.bedrock_coordinates_display.option.offsetY": "Y Offset",
@@ -7,6 +14,27 @@
   "text.config.bedrock_coordinates_display.option.lineSpacing": "Line Spacing",
   "text.config.bedrock_coordinates_display.option.useChatBackgroundOpacity": "Use Chat Background Opacity",
   "text.config.bedrock_coordinates_display.option.backgroundOpacity": "Background Opacity",
+
+  "text.config.bedrock_coordinates_display.option.positionDisplay.enabled": "Enable Position",
+  "text.config.bedrock_coordinates_display.option.positionDisplay.text": "Position Label",
+
+  "text.config.bedrock_coordinates_display.option.dayDisplay.enabled": "Enable Day Counter",
+  "text.config.bedrock_coordinates_display.option.dayDisplay.text": "Day Label",
+
+  "text.config.bedrock_coordinates_display.option.biomeDisplay.enabled": "Enable Biome",
+  "text.config.bedrock_coordinates_display.option.biomeDisplay.text": "Biome Label",
+  "text.config.bedrock_coordinates_display.option.biomeDisplay.prettifyBiome": "Prettify Biome Names",
+
+  "text.config.bedrock_coordinates_display.option.framerateDisplay.enabled": "Enable FPS Counter",
+  "text.config.bedrock_coordinates_display.option.framerateDisplay.text": "FPS Label",
+
+  "text.config.bedrock_coordinates_display.option.speedDisplay.enabled": "Enable Speed",
+  "text.config.bedrock_coordinates_display.option.speedDisplay.text": "Speed Label",
+
   "key.bedrock_coordinates_display.toggle_visibility": "Toggle Visibility",
-  "key.category.bedrock_coordinates_display.keybinds": "Bedrock Coordinates Display"
+  "key.category.bedrock_coordinates_display.keybinds": "Bedrock Coordinates Display",
+
+
+  "text.config.bedrock_coordinates_display.section.mod": "Mod Config",
+  "text.config.bedrock_coordinates_display.section.modules": "Modules"
 }

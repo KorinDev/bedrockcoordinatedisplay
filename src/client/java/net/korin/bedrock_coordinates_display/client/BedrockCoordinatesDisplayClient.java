@@ -20,6 +20,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -100,15 +101,29 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
             biomeName = prettified.toString();
         }
 
-        String coords = String.format("Position: %s, %s, %s", (int)client.player.getX(), (int)client.player.getY(), (int)client.player.getZ());
-        String day = String.format("Day: %s", level.getOverworldClockTime() / 24000L);
-        String biome = String.format("Biome: %s", biomeName);
+        Vec3 delta = player.getDeltaMovement();
+        double _speed;
+        if (player.onGround()) {
+            _speed = Math.sqrt(delta.x * delta.x + delta.z * delta.z);
+        } else {
+            _speed = delta.length();
+        }
+
+        double blocksPerSecond = _speed * 20;
+
+        String coords = String.format("%s: %s, %s, %s", CONFIG.positionDisplay.text(), (int)client.player.getX(), (int)client.player.getY(), (int)client.player.getZ());
+        String day = String.format("%s: %s", CONFIG.dayDisplay.text(), level.getOverworldClockTime() / 24000L);
+        String biome = String.format("%s: %s", CONFIG.biomeDisplay.text(), biomeName);
+        String fps = String.format("%s: %s", CONFIG.framerateDisplay.text(), client.getFps());
+        String speed = String.format("%s: %.1fb/s", CONFIG.speedDisplay.text(), blocksPerSecond);
 
         List<String> lineList = new ArrayList<>();
 
-        if (CONFIG.positionDisplay.enablePosition()) lineList.add(coords);
-        if (CONFIG.dayDisplay.enableDay()) lineList.add(day);
-        if (CONFIG.biomeDisplay.enableBiome()) lineList.add(biome);
+        if (CONFIG.positionDisplay.enabled()) lineList.add(coords);
+        if (CONFIG.dayDisplay.enabled()) lineList.add(day);
+        if (CONFIG.biomeDisplay.enabled()) lineList.add(biome);
+        if (CONFIG.framerateDisplay.enabled()) lineList.add(fps);
+        if (CONFIG.speedDisplay.enabled()) lineList.add(speed);
 
         String[] lines = lineList.toArray(new String[0]);
 

@@ -6,6 +6,7 @@ import io.wispforest.owo.config.annotation.*;
 @Modmenu(modId = "bedrock_coordinates_display")
 @Config(name = "bedrock_coordinates_display", wrapperName = "BedrockCoordinatesDisplayConfig")
 public class ConfigModel {
+    @SectionHeader("mod")
     public boolean enabled = true;
 
     @RangeConstraint(min = 0, max = 128)
@@ -20,29 +21,49 @@ public class ConfigModel {
     @RangeConstraint(min = 0, max = 16)
     public int lineSpacing = 2;
 
+    public boolean useChatBackgroundOpacity = false;
+
+    @RangeConstraint(min = 0, max = 255)
+    public int backgroundOpacity = 150;
+
+    @SectionHeader("modules")
     @Nest public PositionDisplay positionDisplay = new PositionDisplay();
 
     public static class PositionDisplay {
-        public boolean enablePosition = true;
+        public boolean enabled = true;
+        public String text = "Position";
     }
 
     @Nest public DayDisplay dayDisplay = new DayDisplay();
 
     public static class DayDisplay {
-        public boolean enableDay = false;
+        public boolean enabled = false;
+        public String text = "Days played";
     }
 
     @Nest public BiomeDisplay biomeDisplay = new BiomeDisplay();
 
     public static class BiomeDisplay {
-        public boolean enableBiome = false;
+        public boolean enabled = false;
+        public String text = "Biome";
         public boolean prettifyBiome = true;
+    }
+
+    @Nest public FramerateDisplay framerateDisplay = new FramerateDisplay();
+
+    public static class FramerateDisplay {
+        public boolean enabled = false;
+        public String text = "Framerate";
+    }
+
+    @Nest public SpeedDisplay speedDisplay = new SpeedDisplay();
+
+    public static class SpeedDisplay {
+        public boolean enabled = false;
+        public String text = "Speed";
     }
 
 
 
-    public boolean useChatBackgroundOpacity = false;
 
-    @RangeConstraint(min = 0, max = 255)
-    public int backgroundOpacity = 150;
 }
