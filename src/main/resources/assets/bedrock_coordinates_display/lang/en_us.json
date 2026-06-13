@@ -36,5 +36,12 @@
 
 
   "text.config.bedrock_coordinates_display.section.mod": "Mod Config",
-  "text.config.bedrock_coordinates_display.section.modules": "Modules"
+  "text.config.bedrock_coordinates_display.section.modules": "Modules",
+
+  "text.config.bedrock_coordinates_display.category.timeDisplay": "Time Display",
+  "text.config.bedrock_coordinates_display.option.timeDisplay.text": "Time Label",
+  "text.config.bedrock_coordinates_display.option.timeDisplay.enabled": "Enabled",
+  "text.config.bedrock_coordinates_display.option.timeDisplay.ampm": "Use 12-Hour Clock",
+  "text.config.bedrock_coordinates_display.option.timeDisplay.forceInAllDimensions": "Force In All Dimensions",
+  "text.config.bedrock_coordinates_display.option.timeDisplay.forceInAllDimensions.tooltip": "When disabled, the Time display will show '???' in non-overworld dimensions, to match the Clock item."
 }

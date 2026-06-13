@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
@@ -114,6 +115,24 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
 
         double blocksPerSecond = _speed * 20;
 
+        long worldTime = level.getOverworldClockTime();
+        int worldHour = (int)((worldTime / 1000) % 24);
+        int realHour = (worldHour + 6) % 24;
+        int minutes = (int)((worldTime % 1000) / (1000f / 60f));
+
+        String timeFormatString = "ERR";
+
+        if (CONFIG.timeDisplay.ampm()) {
+            int ampmHour = realHour % 12;
+            if (ampmHour == 0) ampmHour = 12;
+            String ampm = (realHour < 12) ? "AM" : "PM";
+            timeFormatString = String.format("%s: %d:%02d %s", CONFIG.timeDisplay.text(), ampmHour, minutes, ampm);
+        } else {
+            timeFormatString = String.format("%s: %02d:%02d", CONFIG.timeDisplay.text(), realHour, minutes);
+        }
+        if (player.level().dimension() != Level.OVERWORLD && !CONFIG.timeDisplay.forceInAllDimensions()) {
+            timeFormatString = String.format("%s: ???", CONFIG.timeDisplay.text());
+        }
         String note = String.format("Note: %s", CONFIG.noteText());
 
         String coords = String.format("%s: %s, %s, %s", CONFIG.positionDisplay.text(), (int)client.player.getX(), (int)client.player.getY(), (int)client.player.getZ());
@@ -121,6 +140,9 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
         String biome = String.format("%s: %s", CONFIG.biomeDisplay.text(), biomeName);
         String fps = String.format("%s: %s", CONFIG.framerateDisplay.text(), client.getFps());
         String speed = String.format("%s: %.1fb/s", CONFIG.speedDisplay.text(), blocksPerSecond);
+        String time = timeFormatString;
+
+
 
         List<String> lineList = new ArrayList<>();
 
@@ -130,6 +152,7 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
         if (CONFIG.framerateDisplay.enabled()) lineList.add(fps);
         if (CONFIG.speedDisplay.enabled()) lineList.add(speed);
         if (!CONFIG.noteText().isEmpty()) lineList.add(note);
+        if (CONFIG.timeDisplay.enabled()) lineList.add(time);
 
         String[] lines = lineList.toArray(new String[0]);
 

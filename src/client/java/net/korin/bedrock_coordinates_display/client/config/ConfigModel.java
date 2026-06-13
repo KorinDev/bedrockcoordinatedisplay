@@ -2,6 +2,8 @@ package net.korin.bedrock_coordinates_display.client.config;
 
 import io.wispforest.owo.config.annotation.*;
 
+import java.sql.Time;
+
 
 @Modmenu(modId = "bedrock_coordinates_display")
 @Config(name = "bedrock_coordinates_display", wrapperName = "BedrockCoordinatesDisplayConfig")
@@ -41,6 +43,15 @@ public class ConfigModel {
         public String text = "Days played";
     }
 
+    @Nest public TimeDisplay timeDisplay = new TimeDisplay();
+
+    public static class TimeDisplay {
+        public boolean enabled = false;
+        public String text = "Time";
+        public boolean ampm = false;
+        public boolean forceInAllDimensions = false;
+    }
+
     @Nest public BiomeDisplay biomeDisplay = new BiomeDisplay();
 
     public static class BiomeDisplay {
@@ -62,6 +73,8 @@ public class ConfigModel {
         public boolean enabled = false;
         public String text = "Speed";
     }
+
+
 
     @ExcludeFromScreen
     public String noteText = "";
