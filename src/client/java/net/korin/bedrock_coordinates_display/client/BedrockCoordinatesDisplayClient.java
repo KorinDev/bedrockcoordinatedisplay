@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.korin.bedrock_coordinates_display.client.command.NoteCommand;
 import net.korin.bedrock_coordinates_display.client.config.BedrockCoordinatesDisplayConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
@@ -64,6 +65,8 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
                 }
             }
         });
+
+        NoteCommand.register();
 	}
 
     private static void extract(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
@@ -111,6 +114,8 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
 
         double blocksPerSecond = _speed * 20;
 
+        String note = String.format("Note: %s", CONFIG.noteText());
+
         String coords = String.format("%s: %s, %s, %s", CONFIG.positionDisplay.text(), (int)client.player.getX(), (int)client.player.getY(), (int)client.player.getZ());
         String day = String.format("%s: %s", CONFIG.dayDisplay.text(), level.getOverworldClockTime() / 24000L);
         String biome = String.format("%s: %s", CONFIG.biomeDisplay.text(), biomeName);
@@ -124,6 +129,7 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
         if (CONFIG.biomeDisplay.enabled()) lineList.add(biome);
         if (CONFIG.framerateDisplay.enabled()) lineList.add(fps);
         if (CONFIG.speedDisplay.enabled()) lineList.add(speed);
+        if (!CONFIG.noteText().isEmpty()) lineList.add(note);
 
         String[] lines = lineList.toArray(new String[0]);
 

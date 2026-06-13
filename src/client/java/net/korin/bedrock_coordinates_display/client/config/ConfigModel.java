@@ -63,6 +63,9 @@ public class ConfigModel {
         public String text = "Speed";
     }
 
+    @ExcludeFromScreen
+    public String noteText = "";
+
 
 
 
