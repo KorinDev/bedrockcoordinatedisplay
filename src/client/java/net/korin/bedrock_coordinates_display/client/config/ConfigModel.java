@@ -2,7 +2,7 @@ package net.korin.bedrock_coordinates_display.client.config;
 
 import io.wispforest.owo.config.annotation.*;
 
-import java.sql.Time;
+import io.wispforest.owo.ui.core.Color;
 
 
 @Modmenu(modId = "bedrock_coordinates_display")
@@ -10,6 +10,11 @@ import java.sql.Time;
 public class ConfigModel {
     @SectionHeader("mod")
     public boolean enabled = true;
+
+    @RangeConstraint(min = 0.1f, max = 2.0f)
+    public float scale = 1.0f;
+
+
 
     @RangeConstraint(min = 0, max = 128)
     public int offsetX = 10;
@@ -28,11 +33,16 @@ public class ConfigModel {
     @RangeConstraint(min = 0, max = 255)
     public int backgroundOpacity = 150;
 
+    /*@SectionHeader("displayOrder")
+    public String displayOrder = "position, day, biome, framerate, speed, time";*/
+
     @SectionHeader("modules")
     @Nest public PositionDisplay positionDisplay = new PositionDisplay();
 
     public static class PositionDisplay {
         public boolean enabled = true;
+        public Color colorText = Color.WHITE;
+        public Color colorValue = Color.WHITE;
         public String text = "Position";
     }
 
@@ -40,6 +50,8 @@ public class ConfigModel {
 
     public static class DayDisplay {
         public boolean enabled = false;
+        public Color colorText = Color.WHITE;
+        public Color colorValue = Color.WHITE;
         public String text = "Days played";
     }
 
@@ -47,6 +59,8 @@ public class ConfigModel {
 
     public static class TimeDisplay {
         public boolean enabled = false;
+        public Color colorText = Color.WHITE;
+        public Color colorValue = Color.WHITE;
         public String text = "Time";
         public boolean ampm = false;
         public boolean forceInAllDimensions = false;
@@ -56,6 +70,8 @@ public class ConfigModel {
 
     public static class BiomeDisplay {
         public boolean enabled = false;
+        public Color colorText = Color.WHITE;
+        public Color colorValue = Color.WHITE;
         public String text = "Biome";
         public boolean prettifyBiome = true;
     }
@@ -64,6 +80,8 @@ public class ConfigModel {
 
     public static class FramerateDisplay {
         public boolean enabled = false;
+        public Color colorText = Color.WHITE;
+        public Color colorValue = Color.WHITE;
         public String text = "Framerate";
     }
 
@@ -71,6 +89,8 @@ public class ConfigModel {
 
     public static class SpeedDisplay {
         public boolean enabled = false;
+        public Color colorText = Color.WHITE;
+        public Color colorValue = Color.WHITE;
         public String text = "Speed";
     }
 

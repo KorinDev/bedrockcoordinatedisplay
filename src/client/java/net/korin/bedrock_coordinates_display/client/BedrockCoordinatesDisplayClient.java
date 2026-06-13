@@ -1,6 +1,7 @@
 package net.korin.bedrock_coordinates_display.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -33,6 +34,7 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
     public static final String MOD_ID = "bedrock_coordinates_display";
 
     public static final BedrockCoordinatesDisplayConfig CONFIG = BedrockCoordinatesDisplayConfig.createAndLoad();
+
 
     public static int y_offset = 10;
     public static int x_offset = 10;
@@ -136,6 +138,7 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
         String note = String.format("Note: %s", CONFIG.noteText());
 
         String coords = String.format("%s: %s, %s, %s", CONFIG.positionDisplay.text(), (int)client.player.getX(), (int)client.player.getY(), (int)client.player.getZ());
+
         String day = String.format("%s: %s", CONFIG.dayDisplay.text(), level.getOverworldClockTime() / 24000L);
         String biome = String.format("%s: %s", CONFIG.biomeDisplay.text(), biomeName);
         String fps = String.format("%s: %s", CONFIG.framerateDisplay.text(), client.getFps());
@@ -144,17 +147,19 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
 
 
 
-        List<String> lineList = new ArrayList<>();
 
-        if (CONFIG.positionDisplay.enabled()) lineList.add(coords);
-        if (CONFIG.dayDisplay.enabled()) lineList.add(day);
-        if (CONFIG.biomeDisplay.enabled()) lineList.add(biome);
-        if (CONFIG.framerateDisplay.enabled()) lineList.add(fps);
-        if (CONFIG.speedDisplay.enabled()) lineList.add(speed);
-        if (!CONFIG.noteText().isEmpty()) lineList.add(note);
-        if (CONFIG.timeDisplay.enabled()) lineList.add(time);
+        List<FormattedLine> lineList = new ArrayList<>();
 
-        String[] lines = lineList.toArray(new String[0]);
+        if (CONFIG.positionDisplay.enabled()) lineList.add(new FormattedLine(coords, CONFIG.positionDisplay.colorText(), CONFIG.positionDisplay.colorValue()));
+        if (CONFIG.dayDisplay.enabled()) lineList.add(new FormattedLine(day, CONFIG.dayDisplay.colorText(), CONFIG.dayDisplay.colorValue()));
+        if (CONFIG.timeDisplay.enabled()) lineList.add(new FormattedLine(time, CONFIG.timeDisplay.colorText(), CONFIG.timeDisplay.colorValue()));
+        if (CONFIG.biomeDisplay.enabled()) lineList.add(new FormattedLine(biome, CONFIG.biomeDisplay.colorText(), CONFIG.biomeDisplay.colorValue()));
+        if (CONFIG.framerateDisplay.enabled()) lineList.add(new FormattedLine(fps, CONFIG.framerateDisplay.colorText(), CONFIG.framerateDisplay.colorValue()));
+        if (CONFIG.speedDisplay.enabled()) lineList.add(new FormattedLine(speed, CONFIG.speedDisplay.colorText(), CONFIG.speedDisplay.colorValue()));
+        if (!CONFIG.noteText().isEmpty()) lineList.add(new FormattedLine(note, Color.WHITE, Color.WHITE));
+
+
+        //String[] lines = lineList.toArray(new String[0]);
 
         graphics.nextStratum();
 
@@ -169,34 +174,87 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
             opacity = Math.min(255, Math.max(0, opacityAlpha));
         }
 
+        float scale = CONFIG.scale();
+
 
 
         int lineHeight = font.lineHeight - 1;
         int maxTextWidth = 0;
-        for (String line : lines) {
-            maxTextWidth = Math.max(maxTextWidth, font.width(line));
+        for (FormattedLine line : lineList) {
+            maxTextWidth = Math.max(maxTextWidth, font.width(line.fullText));
         }
 
-        int totalHeight = (lines.length * lineHeight) + (Math.max(0, lines.length - 1) * lineSpacing);
+        int totalHeight = (lineList.size() * lineHeight) + (Math.max(0, lineList.size() - 1) * lineSpacing);
+
+        graphics.getMatrixStack().pushMatrix();
+        graphics.getMatrixStack().scale(scale, scale);
+
 
         graphics.fill(
-                x_offset - padding,
-                y_offset - padding,
-                x_offset + maxTextWidth + padding,
-                y_offset + totalHeight + padding,
+                (int)(x_offset / scale) - padding,
+                (int)(y_offset / scale) - padding,
+                (int)(x_offset / scale) + maxTextWidth + padding,
+                (int)(y_offset / scale) + totalHeight + padding,
                 ARGB.color(opacity, 0, 0, 0));
 
-        for (int i = 0; i < lines.length; i++) {
-            int yPos = y_offset + (i * (lineHeight + lineSpacing));
-            graphics.text(
+        for (int i = 0; i < lineList.size(); i++) {
+            int yPos = (int)(y_offset / scale) + (i * (lineHeight + lineSpacing));
+            /*graphics.text(
                     font,
                     Component.literal(lines[i]),
-                    x_offset,
+                    (int)(x_offset / scale),
                     yPos,
                     ARGB.color(255, 255, 255, 255),
                     true
-            );
+            );*/
+            FormattedLine line = lineList.get(i);
+            if (!line.label.isEmpty()) {
+                graphics.text(
+                        font,
+                        line.label,
+                        (int)(x_offset / scale),
+                        yPos,
+                        line.labelColor.argb(),
+                        true
+                );
+            }
+
+            if (!line.value.isEmpty()) {
+                int xPos = (int)(x_offset / scale) + font.width(line.label);
+                graphics.text(
+                        font,
+                        line.value,
+                        xPos,
+                        yPos,
+                        line.valueColor.argb(),
+                        true
+                );
+            }
         }
+
+        graphics.getMatrixStack().popMatrix();
         graphics.nextStratum();
+    }
+}
+
+class FormattedLine {
+    public final String fullText;
+    public final String label;
+    public final String value;
+    public final io.wispforest.owo.ui.core.Color labelColor;
+    public final io.wispforest.owo.ui.core.Color valueColor;
+    public FormattedLine(String fullText, io.wispforest.owo.ui.core.Color labelColor, io.wispforest.owo.ui.core.Color valueColor) {
+        this.fullText = fullText.toString();
+        this.labelColor = labelColor;
+        this.valueColor = valueColor;
+
+        int colonIndex = fullText.indexOf(':');
+        if (colonIndex != -1) {
+            this.label = fullText.substring(0, colonIndex + 1);
+            this.value = fullText.substring(colonIndex + 1);
+        } else {
+            this.label = "";
+            this.value = fullText;
+        }
     }
 }

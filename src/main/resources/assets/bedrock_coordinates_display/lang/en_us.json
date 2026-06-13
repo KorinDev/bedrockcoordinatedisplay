@@ -8,6 +8,7 @@
   "text.config.bedrock_coordinates_display.category.speedDisplay": "Speed",
 
   "text.config.bedrock_coordinates_display.option.enabled": "Enabled",
+  "text.config.bedrock_coordinates_display.option.scale": "UI Scale",
   "text.config.bedrock_coordinates_display.option.offsetX": "X Offset",
   "text.config.bedrock_coordinates_display.option.offsetY": "Y Offset",
   "text.config.bedrock_coordinates_display.option.padding": "Padding",
@@ -17,23 +18,32 @@
 
   "text.config.bedrock_coordinates_display.option.positionDisplay.enabled": "Enable Position",
   "text.config.bedrock_coordinates_display.option.positionDisplay.text": "Position Label",
+  "text.config.bedrock_coordinates_display.option.positionDisplay.colorText": "Position Label Color",
+  "text.config.bedrock_coordinates_display.option.positionDisplay.colorValue": "Position Value Color",
 
   "text.config.bedrock_coordinates_display.option.dayDisplay.enabled": "Enable Day Counter",
   "text.config.bedrock_coordinates_display.option.dayDisplay.text": "Day Label",
+  "text.config.bedrock_coordinates_display.option.dayDisplay.colorText": "Day Label Color",
+  "text.config.bedrock_coordinates_display.option.dayDisplay.colorValue": "Day Value Color",
 
   "text.config.bedrock_coordinates_display.option.biomeDisplay.enabled": "Enable Biome",
   "text.config.bedrock_coordinates_display.option.biomeDisplay.text": "Biome Label",
   "text.config.bedrock_coordinates_display.option.biomeDisplay.prettifyBiome": "Prettify Biome Names",
+  "text.config.bedrock_coordinates_display.option.biomeDisplay.colorText": "Biome Label Color",
+  "text.config.bedrock_coordinates_display.option.biomeDisplay.colorValue": "Biome Value Color",
 
   "text.config.bedrock_coordinates_display.option.framerateDisplay.enabled": "Enable FPS Counter",
   "text.config.bedrock_coordinates_display.option.framerateDisplay.text": "FPS Label",
+  "text.config.bedrock_coordinates_display.option.framerateDisplay.colorText": "FPS Label Color",
+  "text.config.bedrock_coordinates_display.option.framerateDisplay.colorValue": "FPS Value Color",
 
   "text.config.bedrock_coordinates_display.option.speedDisplay.enabled": "Enable Speed",
   "text.config.bedrock_coordinates_display.option.speedDisplay.text": "Speed Label",
+  "text.config.bedrock_coordinates_display.option.speedDisplay.colorText": "Speed Label Color",
+  "text.config.bedrock_coordinates_display.option.speedDisplay.colorValue": "Speed Value Color",
 
   "key.bedrock_coordinates_display.toggle_visibility": "Toggle Visibility",
   "key.category.bedrock_coordinates_display.keybinds": "Bedrock Coordinates Display",
-
 
   "text.config.bedrock_coordinates_display.section.mod": "Mod Config",
   "text.config.bedrock_coordinates_display.section.modules": "Modules",
@@ -43,5 +53,10 @@
   "text.config.bedrock_coordinates_display.option.timeDisplay.enabled": "Enabled",
   "text.config.bedrock_coordinates_display.option.timeDisplay.ampm": "Use 12-Hour Clock",
   "text.config.bedrock_coordinates_display.option.timeDisplay.forceInAllDimensions": "Force In All Dimensions",
-  "text.config.bedrock_coordinates_display.option.timeDisplay.forceInAllDimensions.tooltip": "When disabled, the Time display will show '???' in non-overworld dimensions, to match the Clock item."
+  "text.config.bedrock_coordinates_display.option.timeDisplay.forceInAllDimensions.tooltip": "When disabled, the Time display will show '???' in non-overworld dimensions, to match the Clock item.",
+  "text.config.bedrock_coordinates_display.option.timeDisplay.colorText": "Time Label Color",
+  "text.config.bedrock_coordinates_display.option.timeDisplay.colorValue": "Time Value Color",
+
+  "text.config.bedrock_coordinates_display.section.displayOrder": "Display Order",
+  "text.config.bedrock_coordinates_display.option.displayOrder": "Order"
 }
