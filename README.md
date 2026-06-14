@@ -1,3 +1,6 @@
+[CurseForge](https://www.curseforge.com/minecraft/mc-mods/bedrock-coordinates-display)
+[Modrinth](https://modrinth.com/mod/bedrock-coordinates-display)
+
 # Bedrock Coordinates Display
 
 **#MadeWithOWOLIB**
