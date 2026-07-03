@@ -2,7 +2,9 @@ package net.korin.bedrock_coordinates_display.client.config;
 
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
+import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedList;
 import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedColor;
+import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedEnum;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import net.korin.bedrock_coordinates_display.client.BedrockCoordinatesDisplayClient;
@@ -27,6 +29,14 @@ public class ModConfig extends Config {
     public boolean useChatBackgroundOpacity = false;
     public ValidatedInt backgroundOpacity = new ValidatedInt(150, 255, 0);
 
+    public enum DisplayModule {
+        POSITION, DAY, TIME, BIOME, FRAMERATE, SPEED
+    }
+
+    public ValidatedList<DisplayModule> displayOrder = new ValidatedEnum(DisplayModule.class)
+            .toList(DisplayModule.POSITION, DisplayModule.DAY, DisplayModule.TIME,
+                    DisplayModule.BIOME, DisplayModule.FRAMERATE, DisplayModule.SPEED);
+
 
     public PositionDisplay positionDisplay = new PositionDisplay();
     public DayDisplay dayDisplay = new DayDisplay();
@@ -38,7 +48,6 @@ public class ModConfig extends Config {
 
     public static class PositionDisplay extends ConfigSection {
         public PositionDisplay(){super();}
-        public boolean enabled = true;
         public ValidatedColor colorText = new ValidatedColor(Color.WHITE, false);
         public ValidatedColor colorValue = new ValidatedColor(Color.WHITE, false);
         public String text = "Position";
@@ -46,7 +55,6 @@ public class ModConfig extends Config {
 
     public static class DayDisplay extends ConfigSection {
         public DayDisplay() {super();}
-        public boolean enabled = true;
         public ValidatedColor colorText = new ValidatedColor(Color.WHITE, false);
         public ValidatedColor colorValue = new ValidatedColor(Color.WHITE, false);
         public String text = "Days played";
@@ -54,7 +62,6 @@ public class ModConfig extends Config {
 
     public static class TimeDisplay extends ConfigSection {
         public TimeDisplay() {super();}
-        public boolean enabled = true;
         public ValidatedColor colorText = new ValidatedColor(Color.WHITE, false);
         public ValidatedColor colorValue = new ValidatedColor(Color.WHITE, false);
         public String text = "Time";
@@ -64,7 +71,6 @@ public class ModConfig extends Config {
 
     public static class BiomeDisplay extends ConfigSection {
         public BiomeDisplay() {super();}
-        public boolean enabled = false;
         public ValidatedColor colorText = new ValidatedColor(Color.WHITE, false);
         public ValidatedColor colorValue = new ValidatedColor(Color.WHITE, false);
         public String text = "Biome";
@@ -73,7 +79,6 @@ public class ModConfig extends Config {
 
     public static class FramerateDisplay extends ConfigSection {
         public FramerateDisplay() {super();}
-        public boolean enabled = true;
         public ValidatedColor colorText = new ValidatedColor(Color.WHITE, false);
         public ValidatedColor colorValue = new ValidatedColor(Color.WHITE, false);
         public String text = "Framerate";
@@ -81,7 +86,6 @@ public class ModConfig extends Config {
 
     public static class SpeedDisplay extends ConfigSection {
         public SpeedDisplay() {super();}
-        public boolean enabled = true;
         public ValidatedColor colorText = new ValidatedColor(Color.WHITE, false);
         public ValidatedColor colorValue = new ValidatedColor(Color.WHITE, false);
         public String text = "Speed";

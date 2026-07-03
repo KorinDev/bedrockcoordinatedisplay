@@ -19,7 +19,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +33,16 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
+
+    record OrderedLine(
+            String label,
+            String value,
+            ValidatedColor labelColor,
+            ValidatedColor valueColor) {
+        public String fullText() {
+            return label + value;
+        }
+    }
 
     public static final String MOD_ID = "bedrock_coordinates_display";
 
@@ -91,79 +100,76 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
         if (player == null) return;
         if (level == null) return;
 
-        Holder<Biome> biomeHolder = level.getBiome(player.blockPosition());
-        String biomeName = level.registryAccess()
-                .lookupOrThrow(Registries.BIOME)
-                .getKey(biomeHolder.value())
-                .getPath();
+        String posLabel = CONFIG.positionDisplay.text + ": ";
+        String posValue = String.format("%s, %s, %s",
+                (int)player.getX(),
+                (int)player.getY(),
+                (int)player.getZ());
 
-        if (CONFIG.biomeDisplay.prettifyBiome) {
-            String[] split = biomeName.split("_");
-            StringBuilder prettified = new StringBuilder();
-            for (int i = 0; i < split.length; i ++) {
-                if (i > 0) prettified.append(" ");
-                String word = split[i];
-                if (word.length() > 0) {
-                    prettified.append(Character.toUpperCase(word.charAt(0)))
-                            .append(word.substring(1).toLowerCase());
-                }
+        String dayLabel = CONFIG.dayDisplay.text + ": ";
+        String dayValue = String.valueOf(level.getOverworldClockTime() / 24000L);
+
+        String timeLabel = CONFIG.timeDisplay.text + ": ";
+        String timeValue = getTimeString(level, player);
+
+        String biomeLabel = CONFIG.biomeDisplay.text + ": ";
+        String biomeValue = getBiomeString(level, player);
+
+        String fpsLabel = CONFIG.framerateDisplay.text + ": ";
+        String fpsValue = String.valueOf(client.getFps());
+
+        String speedLabel = CONFIG.speedDisplay.text + ": ";
+        String speedValue = getSpeedString(player);
+
+        String noteValue = CONFIG.noteText;
+
+        List<OrderedLine> lines = new ArrayList<>();
+
+        for (ModConfig.DisplayModule module : CONFIG.displayOrder) {
+            switch (module) {
+                case POSITION -> lines.add(new OrderedLine(
+                        posLabel, posValue,
+                        CONFIG.positionDisplay.colorText,
+                        CONFIG.positionDisplay.colorValue
+                ));
+                case DAY -> lines.add(new OrderedLine(
+                        dayLabel, dayValue,
+                        CONFIG.dayDisplay.colorText,
+                        CONFIG.dayDisplay.colorValue
+                ));
+                case TIME -> lines.add(new OrderedLine(
+                        timeLabel, timeValue,
+                        CONFIG.timeDisplay.colorText,
+                        CONFIG.timeDisplay.colorValue
+                ));
+                case BIOME -> lines.add(new OrderedLine(
+                        biomeLabel, biomeValue,
+                        CONFIG.biomeDisplay.colorText,
+                        CONFIG.biomeDisplay.colorValue
+                ));
+                case FRAMERATE -> lines.add(new OrderedLine(
+                        fpsLabel, fpsValue,
+                        CONFIG.framerateDisplay.colorText,
+                        CONFIG.framerateDisplay.colorValue
+                ));
+                case SPEED -> lines.add(new OrderedLine(
+                        speedLabel, speedValue,
+                        CONFIG.speedDisplay.colorText,
+                        CONFIG.speedDisplay.colorValue
+                ));
             }
-            biomeName = prettified.toString();
         }
 
-        Vec3 delta = player.getDeltaMovement();
-        double _speed;
-        if (player.onGround()) {
-            _speed = Math.sqrt(delta.x * delta.x + delta.z * delta.z);
-        } else {
-            _speed = delta.length();
+        if (!noteValue.isEmpty()) {
+            lines.add(new OrderedLine(
+                    "Note: ", noteValue,
+                    new ValidatedColor(Color.WHITE),
+                    new ValidatedColor(Color.WHITE)
+            ));
         }
-
-        double blocksPerSecond = _speed * 20;
-
-        long worldTime = level.getOverworldClockTime();
-        int worldHour = (int)((worldTime / 1000) % 24);
-        int realHour = (worldHour + 6) % 24;
-        int minutes = (int)((worldTime % 1000) / (1000f / 60f));
-
-        String timeFormatString = "ERR";
-
-        if (CONFIG.timeDisplay.ampm) {
-            int ampmHour = realHour % 12;
-            if (ampmHour == 0) ampmHour = 12;
-            String ampm = (realHour < 12) ? "AM" : "PM";
-            timeFormatString = String.format("%s: %d:%02d %s", CONFIG.timeDisplay.text, ampmHour, minutes, ampm);
-        } else {
-            timeFormatString = String.format("%s: %02d:%02d", CONFIG.timeDisplay.text, realHour, minutes);
-        }
-        if (player.level().dimension() != Level.OVERWORLD && !CONFIG.timeDisplay.forceInAllDimensions) {
-            timeFormatString = String.format("%s: ???", CONFIG.timeDisplay.text);
-        }
-        String note = String.format("Note: %s", CONFIG.noteText);
-
-        String coords = String.format("%s: %s, %s, %s", CONFIG.positionDisplay.text, (int)client.player.getX(), (int)client.player.getY(), (int)client.player.getZ());
-
-        String day = String.format("%s: %s", CONFIG.dayDisplay.text, level.getOverworldClockTime() / 24000L);
-        String biome = String.format("%s: %s", CONFIG.biomeDisplay.text, biomeName);
-        String fps = String.format("%s: %s", CONFIG.framerateDisplay.text, client.getFps());
-        String speed = String.format("%s: %.1fb/s", CONFIG.speedDisplay.text, blocksPerSecond);
-        String time = timeFormatString;
+        if (lines.isEmpty()) return;
 
 
-
-
-        List<FormattedLine> lineList = new ArrayList<>();
-
-        if (CONFIG.positionDisplay.enabled) lineList.add(new FormattedLine(coords, CONFIG.positionDisplay.colorText, CONFIG.positionDisplay.colorValue));
-        if (CONFIG.dayDisplay.enabled) lineList.add(new FormattedLine(day, CONFIG.dayDisplay.colorText, CONFIG.dayDisplay.colorValue));
-        if (CONFIG.timeDisplay.enabled) lineList.add(new FormattedLine(time, CONFIG.timeDisplay.colorText, CONFIG.timeDisplay.colorValue));
-        if (CONFIG.biomeDisplay.enabled) lineList.add(new FormattedLine(biome, CONFIG.biomeDisplay.colorText, CONFIG.biomeDisplay.colorValue));
-        if (CONFIG.framerateDisplay.enabled) lineList.add(new FormattedLine(fps, CONFIG.framerateDisplay.colorText, CONFIG.framerateDisplay.colorValue));
-        if (CONFIG.speedDisplay.enabled) lineList.add(new FormattedLine(speed, CONFIG.speedDisplay.colorText, CONFIG.speedDisplay.colorValue));
-        if (!CONFIG.noteText.isEmpty()) lineList.add(new FormattedLine(note, new ValidatedColor(Color.WHITE), new ValidatedColor(Color.WHITE)));
-
-
-        //String[] lines = lineList.toArray(new String[0]);
 
         graphics.nextStratum();
 
@@ -184,11 +190,11 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
 
         int lineHeight = font.lineHeight - 1;
         int maxTextWidth = 0;
-        for (FormattedLine line : lineList) {
-            maxTextWidth = Math.max(maxTextWidth, font.width(line.fullText));
+        for (OrderedLine line : lines) {
+            maxTextWidth = Math.max(maxTextWidth, font.width(line.fullText()));
         }
 
-        int totalHeight = (lineList.size() * lineHeight) + (Math.max(0, lineList.size() - 1) * lineSpacing);
+        int totalHeight = (lines.size() * lineHeight) + (Math.max(0, lines.size() - 1) * lineSpacing);
 
 
         Matrix3x2fStack pose = graphics.pose();
@@ -202,9 +208,9 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
                 (int)(y_offset / scale) + totalHeight + padding,
                 ARGB.color(opacity, 0, 0, 0));
 
-        for (int i = 0; i < lineList.size(); i++) {
+        for (int i = 0; i < lines.size(); i++) {
             int yPos = (int)(y_offset / scale) + (i * (lineHeight + lineSpacing));
-            FormattedLine line = lineList.get(i);
+            OrderedLine line = lines.get(i);
             if (!line.label.isEmpty()) {
                 graphics.text(
                         font,
@@ -232,26 +238,56 @@ public class BedrockCoordinatesDisplayClient implements ClientModInitializer {
         pose.popMatrix();
         graphics.nextStratum();
     }
-}
 
-class FormattedLine {
-    public final String fullText;
-    public final String label;
-    public final String value;
-    public final ValidatedColor labelColor;
-    public final ValidatedColor valueColor;
-    public FormattedLine(String fullText, ValidatedColor labelColor, ValidatedColor valueColor) {
-        this.fullText = fullText.toString();
-        this.labelColor = labelColor;
-        this.valueColor = valueColor;
+    private static String getTimeString(ClientLevel level, Player player) {
+        long worldTime = level.getOverworldClockTime();
+        int worldHour = (int)((worldTime / 1000) % 24);
+        int realHour = (worldHour + 6) % 24;
+        int minutes = (int)((worldTime % 1000) / (1000f / 60f));
+        if (player.level().dimension() != Level.OVERWORLD && !CONFIG.timeDisplay.forceInAllDimensions)
+            return "???";
 
-        int colonIndex = fullText.indexOf(':');
-        if (colonIndex != -1) {
-            this.label = fullText.substring(0, colonIndex + 1);
-            this.value = fullText.substring(colonIndex + 1);
+        if (CONFIG.timeDisplay.ampm) {
+            int ampmHour = realHour % 12;
+            if (ampmHour == 0) ampmHour = 12;
+            String ampm = (realHour < 12) ? "AM" : "PM";
+            return String.format("%d:@02d %s", ampmHour, minutes, ampm);
         } else {
-            this.label = "";
-            this.value = fullText;
+            return String.format("%02d:%02d", realHour, minutes);
         }
+    }
+
+    private static String getBiomeString(ClientLevel level, Player player) {
+        Holder<Biome> biomeHolder = level.getBiome(player.blockPosition());
+        String biomeName = level.registryAccess()
+                .lookupOrThrow(Registries.BIOME)
+                .getKey(biomeHolder.value())
+                .getPath();
+
+        if (CONFIG.biomeDisplay.prettifyBiome) {
+            String[] split = biomeName.split("_");
+            StringBuilder prettified = new StringBuilder();
+            for (int i = 0; i < split.length; i++) {
+                if (i > 0) prettified.append(" ");
+                String word = split[i];
+                if (word.length() > 0)
+                    prettified.append(Character.toUpperCase(word.charAt(0)))
+                            .append(word.substring(1).toLowerCase());
+            }
+            return prettified.toString();
+        }
+        return biomeName;
+    }
+
+    private static String getSpeedString(Player player) {
+        Vec3 delta = player.getDeltaMovement();
+        double _speed;
+        if (player.onGround()) {
+            _speed = Math.sqrt(delta.x * delta.x + delta.z * delta.z);
+        } else {
+            _speed = delta.length();
+        }
+        double bps = _speed * 20;
+        return String.format("%.1fb/s", bps);
     }
 }
