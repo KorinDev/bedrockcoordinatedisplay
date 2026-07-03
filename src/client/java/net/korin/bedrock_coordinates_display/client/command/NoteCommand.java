@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.korin.bedrock_coordinates_display.client.BedrockCoordinatesDisplayClient;
+
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
@@ -25,14 +26,14 @@ public class NoteCommand {
             noteText = noteText.substring(1, noteText.length() - 1);
         }
 
-        BedrockCoordinatesDisplayClient.CONFIG.noteText(noteText);
+        BedrockCoordinatesDisplayClient.CONFIG.noteText = noteText;
         BedrockCoordinatesDisplayClient.CONFIG.save();
 
         return 1;
     }
 
     private static int executeClearNote(CommandContext<FabricClientCommandSource> context) {
-        BedrockCoordinatesDisplayClient.CONFIG.noteText("");
+        BedrockCoordinatesDisplayClient.CONFIG.noteText = "";
         BedrockCoordinatesDisplayClient.CONFIG.save();
         return 1;
     }
